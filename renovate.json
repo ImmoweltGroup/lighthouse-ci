@@ -1,0 +1,10 @@
+{
+  "semanticCommitType": "TASK",
+  "semanticCommitScope": null,
+  "semanticCommits": true,
+  "automerge": true,
+  "major": {
+    "automerge": false
+  },
+  "ignoreDeps": ["semantic-release"]
+}
