@@ -47,6 +47,7 @@ const launchChromeAndRunLighthouse = url => {
 }
 
 const persistReport = (fileName, fileData, fileDestination) => {
+  console.info('Creating report "%s" in "%s"', fileName, fileDestination)
   if (!existsSync(fileDestination)) {
     debug('Creating report directory "%s"', fileDestination)
     mkdirSync(fileDestination)

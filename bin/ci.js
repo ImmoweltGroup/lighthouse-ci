@@ -4,6 +4,7 @@ const Promise = require('bluebird')
 const debug = require('../src/logger')
 const {format} = require('util')
 const {resolve} = require('path')
+const flatten = require('lodash.flattendeep')
 const {launchChromeAndRunLighthouse, persistReport} = require('../')
 
 // Prepare CLI
@@ -18,9 +19,8 @@ const yargs = require('yargs')
     alias: 'r'
   })
   .option('quiet', {
-    description: 'Be quiet',
+    description: 'Just shut up',
     type: 'boolean',
-    default: false,
     alias: 'q'
   })
   .option('performance', {
@@ -57,7 +57,10 @@ Promise
     if (!yargs.urls) {
       throw new Error('No URLs provided')
     }
-    debug('Initializing %s', JSON.stringify(yargs.urls))
+    if (!yargs.quiet) {
+      console.info('Running')
+    }
+    debug('URLs: %s', JSON.stringify(yargs.urls))
     return yargs.urls
   })
   .then(urls => Promise
@@ -66,6 +69,9 @@ Promise
   .then(results => {
     if (results.length === 0) {
       throw new Error('No results received due to previous errors')
+    }
+    if (!yargs.quiet) {
+      console.info('Reports succeed %i/%i', results.length, yargs.urls.length)
     }
     debug('Reports succeed %i/%i', results.length, yargs.urls.length)
     return results
@@ -77,22 +83,16 @@ Promise
     }
     return result
   })
-  .catch(e => {
-    throw e
-  })
   // Threshold validation
-  .each(result => {
-    result.scores.forEach(score => {
-      if (score.score < yargs[score.id]) {
-        throw new Error(format('%s threshold not met: %i/%i', score.title, score.score, yargs[score.id]))
+  .map(result => result.scores.reduce((score, value) => {
+    debug('Checking thresholds (%s)', result.url)
+    if (value.score < yargs[value.id]) {
+      if (!yargs.quiet) {
+        console.error('%s threshold not met: %i/%i (%s)', value.title, value.score, yargs[value.id], result.url)
       }
-    })
-  })
-  // Exit process with proper exit code
-  .then(() => process.exit(0))
-  .catch(e => {
-    if (!yargs.quiet) {
-      console.error(e.message)
+      score.push(format('%s threshold not met: %i/%i (%s)', value.title, value.score, yargs[value.id], result.url))
     }
-    process.exit(1)
-  })
+    return score
+  }, []))
+  .then(flatten)
+  .then(errors => process.exit(errors.length > 0 ? 1 : 0))
