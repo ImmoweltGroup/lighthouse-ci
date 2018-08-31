@@ -25,9 +25,19 @@ For more information use --help
 lighthouse-ci --help
 ```
 
+# Docker
+
+We dockerized this package for a better usability in CI pipelines, you can use it locally like this:
+```
+docker pull immowelt/lighthouse-ci:latest
+docker run -v /path/for/reports:/usr/src/app/lighthouse immowelt/lighthouse-ci:latest https://immowelt.de/ -r
+```
+
+> NOTE: If you want to get the generated reports locally, you need to mount a folder directly to container.
+
 # TODOs
 
 * Threshold configuration via config file
 * Create node API
-* Dockerized images for direct usage in CI pipeline
+* ~~Dockerized images for direct usage in CI pipeline~~
 * ***Unit tests are missing!***
