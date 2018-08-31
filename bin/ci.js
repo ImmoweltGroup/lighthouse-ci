@@ -2,7 +2,7 @@
 
 const Promise = require('bluebird')
 const signale = require('signale')
-const {resolve} = require('path')
+const { resolve } = require('path')
 const flatten = require('lodash.flattendeep')
 const pick = require('lodash.pick')
 const lighthouse = require('lighthouse')
@@ -57,12 +57,12 @@ if (yargs.quiet) {
   signale.disable()
 }
 
-const {info, success, warn, error} = signale
-const {persist} = require('../src/report')
-const {accumulate, evaluate} = require('../src/result')
+const { info, success, warn, error } = signale
+const { persist } = require('../src/report')
+const { accumulate, evaluate } = require('../src/result')
 
 const launchChromeAndRunLighthouse = url => Promise
-  .resolve(chromeLauncher.launch({chromeFlags: ['--show-paint-rects', '--headless']}))
+  .resolve(chromeLauncher.launch({ chromeFlags: ['--show-paint-rects', '--headless'] }))
   .then(chrome => {
     info('Chrome running on port %i {%s}', chrome.port, url)
     const opts = {

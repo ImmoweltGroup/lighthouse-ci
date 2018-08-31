@@ -1,10 +1,10 @@
 const pick = require('lodash.pick')
-const {format} = require('util')
-const {getFilenamePrefix} = require('lighthouse/lighthouse-core/lib/file-namer')
+const { format } = require('util')
+const { getFilenamePrefix } = require('lighthouse/lighthouse-core/lib/file-namer')
 
 const processScores = categories => categories
   .map(category => pick(category, 'id', 'score', 'title'))
-  .map(category => Object.assign(category, {score: Math.round(category.score * 100)}))
+  .map(category => Object.assign(category, { score: Math.round(category.score * 100) }))
 
 const accumulate = result => ({
   scores: processScores(Object.values(result.lhr.categories)),
@@ -20,4 +20,4 @@ const evaluate = (result, thresholds) => result.scores.reduce((score, value) => 
   return score
 }, [])
 
-module.exports = {processScores, accumulate, evaluate}
+module.exports = { processScores, accumulate, evaluate }
