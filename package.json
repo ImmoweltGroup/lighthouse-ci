@@ -55,11 +55,12 @@
     "start": "node ./bin/ci.js",
     "lint": "standard",
     "release": "semantic-release",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest src"
   },
   "devDependencies": {
     "@semantic-release/github": "3.0.3",
     "@semantic-release/npm": "3.4.1",
+    "jest": "23.5.0",
     "semantic-release": "13.4.1",
     "standard": "11.0.1"
   }
