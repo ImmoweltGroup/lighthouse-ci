@@ -83,7 +83,7 @@ Promise
   // Report generation
   .each(result => {
     if (yargs.report) {
-      const path = resolve(__dirname, '../reports')
+      const path = resolve(process.cwd(), 'reports')
       return persistReport(result.reportName, result.report, path)
     }
     return result
