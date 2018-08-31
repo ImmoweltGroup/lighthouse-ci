@@ -1,12 +1,12 @@
 #!/bin/bash
 
-_kill_chromium_xcfb() {
+_kill_chromium_xvfb() {
   kill -TERM $chromium
   wait $chromium
   kill -TERM $xvfb
 }
 
-trap _kill_chromium_xcfb SIGTERM
+trap _kill_chromium_xvfb SIGTERM
 
 XVFB_WHD=${XVFB_WHD:-1280x720x16}
 
