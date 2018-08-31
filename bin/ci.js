@@ -2,9 +2,11 @@
 
 const Promise = require('bluebird')
 const signale = require('signale')
-const {format} = require('util')
 const {resolve} = require('path')
 const flatten = require('lodash.flattendeep')
+const pick = require('lodash.pick')
+const lighthouse = require('lighthouse')
+const chromeLauncher = require('chrome-launcher')
 
 // Prepare CLI
 // eslint-disable--next-line
@@ -54,9 +56,37 @@ const yargs = require('yargs')
 if (yargs.quiet) {
   signale.disable()
 }
-const {info, warn, error} = signale
 
-const {launchChromeAndRunLighthouse, persistReport} = require('../src/api')
+const {info, success, warn, error} = signale
+const {persist} = require('../src/report')
+const {accumulate, evaluate} = require('../src/result')
+
+const launchChromeAndRunLighthouse = url => Promise
+  .resolve(chromeLauncher.launch({chromeFlags: ['--show-paint-rects', '--headless']}))
+  .then(chrome => {
+    info('Chrome running on port %i {%s}', chrome.port, url)
+    const opts = {
+      port: chrome.port,
+      output: 'html'
+    }
+    return lighthouse(url, opts)
+      .then(result => {
+        success('Lighthouse scheduled {%s}', url)
+        return Promise
+          .resolve(chrome.kill())
+          .thenReturn(result)
+          .then(accumulate)
+      })
+      .catch(e => {
+        warn('Lighthouse stopped {%s} | %s', url, e.friendlyMessage || e.message)
+        chrome.kill()
+        return null
+      })
+  })
+  .catch(e => {
+    warn('Chrome crashed {%s} | %s', url, e.message)
+    return null
+  })
 
 Promise
   .try(() => {
@@ -76,7 +106,7 @@ Promise
       throw new Error('No results received due to previous errors')
     }
     if (results.length < yargs.urls.length) {
-      warn('%i/%i reports failed', results.length, yargs.urls.length)
+      warn('Some reports failed %i/%i', results.length, yargs.urls.length)
     }
     return results
   })
@@ -84,22 +114,19 @@ Promise
   .each(result => {
     if (yargs.report) {
       const path = resolve(process.cwd(), 'reports')
-      return persistReport(result.reportName, result.report, path)
+      return persist(result.reportName, result.report, path)
+        .then(file => info('Created report "%s"', file))
     }
     return result
   })
   // Threshold validation
   .map(result => {
-    info('Checking thresholds [%s]', result.url)
-    return result.scores.reduce((score, value) => {
-      if (value.score < yargs[value.id]) {
-        if (!yargs.quiet) {
-          error('%s threshold not met: %i/%i [%s]', value.title, value.score, yargs[value.id], result.url)
-        }
-        score.push(format('%s threshold not met: %i/%i [%s]', value.title, value.score, yargs[value.id], result.url))
-      }
-      return score
-    }, [])
+    info('Checking thresholds {%s}', result.url)
+    return evaluate(result, pick(yargs, 'performance', 'pwa', 'best-practices', 'accessibility', 'seo'))
   })
   .then(flatten)
+  .each(e => {
+    error(e)
+    return e
+  })
   .then(errors => process.exit(errors.length > 0 ? 1 : 0))
