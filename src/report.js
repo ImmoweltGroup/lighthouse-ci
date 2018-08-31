@@ -1,5 +1,5 @@
-const {resolve} = require('path')
-const {existsSync, mkdirSync, writeFileSync} = require('fs')
+const { resolve } = require('path')
+const { existsSync, mkdirSync, writeFileSync } = require('fs')
 
 const persist = (fileName, fileData, fileDestination) => {
   if (!existsSync(fileDestination)) {
@@ -10,4 +10,4 @@ const persist = (fileName, fileData, fileDestination) => {
   return filePathAndName
 }
 
-module.exports = {persist}
+module.exports = { persist }
