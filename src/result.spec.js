@@ -1,4 +1,4 @@
-const {processScores, accumulate, evaluate} = require('../src/result')
+const { processScores, accumulate, evaluate } = require('../src/result')
 
 jest.mock('lighthouse/lighthouse-core/lib/file-namer', () => ({
   getFilenamePrefix: () => 'report'

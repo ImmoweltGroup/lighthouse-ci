@@ -1,6 +1,6 @@
 const Promise = require('bluebird')
-const {resolve} = require('path')
-const {existsSync, mkdirSync, writeFile} = require('fs')
+const { resolve } = require('path')
+const { existsSync, mkdirSync, writeFile } = require('fs')
 
 const persist = (fileName, fileData, fileDestination) => {
   if (!existsSync(fileDestination)) {
@@ -12,4 +12,4 @@ const persist = (fileName, fileData, fileDestination) => {
     .thenReturn(filePathAndName)
 }
 
-module.exports = {persist}
+module.exports = { persist }
