@@ -1,11 +1,10 @@
 #!/usr/bin/env node
 
 const Promise = require('bluebird')
-const debug = require('../src/logger')
+const signale = require('signale')
 const {format} = require('util')
 const {resolve} = require('path')
 const flatten = require('lodash.flattendeep')
-const {launchChromeAndRunLighthouse, persistReport} = require('../')
 
 // Prepare CLI
 // eslint-disable--next-line
@@ -52,30 +51,36 @@ const yargs = require('yargs')
   .help()
   .argv
 
+if (yargs.quiet) {
+  signale.disable()
+}
+const {info, warn, error} = signale
+
+const {launchChromeAndRunLighthouse, persistReport} = require('../src/api')
+
 Promise
   .try(() => {
     if (!yargs.urls) {
       throw new Error('No URLs provided')
     }
-    if (!yargs.quiet) {
-      console.info('Running')
-    }
-    debug('URLs: %s', JSON.stringify(yargs.urls))
+    info('Running [%s]', yargs.urls.join(', '))
     return yargs.urls
   })
+  // Start scheduling (Chrome, Lighthouse)
   .then(urls => Promise
     .all(urls.map(launchChromeAndRunLighthouse))
     .filter(result => result !== null))
+  // Evaluate results
   .then(results => {
     if (results.length === 0) {
       throw new Error('No results received due to previous errors')
     }
-    if (!yargs.quiet) {
-      console.info('Reports succeed %i/%i', results.length, yargs.urls.length)
+    if (results.length < yargs.urls.length) {
+      warn('%i/%i reports failed', results.length, yargs.urls.length)
     }
-    debug('Reports succeed %i/%i', results.length, yargs.urls.length)
     return results
   })
+  // Report generation
   .each(result => {
     if (yargs.report) {
       const path = resolve(__dirname, '../reports')
@@ -84,15 +89,17 @@ Promise
     return result
   })
   // Threshold validation
-  .map(result => result.scores.reduce((score, value) => {
-    debug('Checking thresholds (%s)', result.url)
-    if (value.score < yargs[value.id]) {
-      if (!yargs.quiet) {
-        console.error('%s threshold not met: %i/%i (%s)', value.title, value.score, yargs[value.id], result.url)
+  .map(result => {
+    info('Checking thresholds [%s]', result.url)
+    return result.scores.reduce((score, value) => {
+      if (value.score < yargs[value.id]) {
+        if (!yargs.quiet) {
+          error('%s threshold not met: %i/%i [%s]', value.title, value.score, yargs[value.id], result.url)
+        }
+        score.push(format('%s threshold not met: %i/%i [%s]', value.title, value.score, yargs[value.id], result.url))
       }
-      score.push(format('%s threshold not met: %i/%i (%s)', value.title, value.score, yargs[value.id], result.url))
-    }
-    return score
-  }, []))
+      return score
+    }, [])
+  })
   .then(flatten)
   .then(errors => process.exit(errors.length > 0 ? 1 : 0))
