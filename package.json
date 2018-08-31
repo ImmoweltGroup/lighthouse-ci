@@ -12,6 +12,9 @@
   "bin": {
     "lighthouse-ci": "bin/ci.js"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "release": {
     "branch": "master",
     "analyzeCommits": {
