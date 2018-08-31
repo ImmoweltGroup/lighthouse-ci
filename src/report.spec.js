@@ -1,4 +1,4 @@
-const {persist} = require('../src/report')
+const { persist } = require('../src/report')
 
 jest.mock('fs')
 
