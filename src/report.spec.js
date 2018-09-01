@@ -4,21 +4,19 @@ jest.mock('fs')
 
 describe('report', () => {
   const { mkdirSync, existsSync } = require('fs')
-  beforeEach(() => {
+  afterEach(() => {
     jest.clearAllMocks()
   })
-  it('.persist() should persist', () => {
+  it('.persist() should persist and create a folder if path destination does not exists', () => {
+    existsSync.mockImplementation(() => false)
     const persisted = persist('report.html', 'data', '/dest')
+    expect(mkdirSync.mock.calls.length).toBe(1)
     expect(persisted).toBe('/dest/report.html')
   })
-  it('.persist() should create a folder if path destination does not exists', () => {
-    existsSync.mockImplementation(() => false)
-    persist('file', 'rawData', '/path/to/check')
-    expect(mkdirSync.mock.calls.length).toBe(1)
-  })
-  it('.persist() should skip folder creation if path destination does not exists', () => {
+  it('.persist() should persist and skip folder creation because path destination does exist', () => {
     existsSync.mockImplementation(() => true)
-    persist('file', 'rawData', '/path/to/check')
+    const persisted = persist('report.html', 'data', '/dest')
     expect(mkdirSync.mock.calls.length).toBe(0)
+    expect(persisted).toBe('/dest/report.html')
   })
 })
