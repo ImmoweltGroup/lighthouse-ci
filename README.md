@@ -25,6 +25,23 @@ For more information use --help
 lighthouse-ci --help
 ```
 
+# Configuration
+You are able to define a config file which must be named `lighthouse-ci.json`. Lighthouse-ci search for this config in the current working dir where you execute lighthouse-ci. The config file must contains a threshold object, which refers the lighthouse categories with the threshold scores which musst be passed.
+
+> NOTE: **The passed threshold arguments to the cli overrides the config thresolds**
+
+```
+{
+  "threshold": {
+    "performance": 80,
+    "pwa": 80,
+    "best-practices": 80,
+    "accessibility": 80,
+    "seo": 80
+  }
+}
+```
+
 # Docker
 
 We dockerized this package for a better usability in CI pipelines, you can use it locally like this:

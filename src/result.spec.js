@@ -3,6 +3,18 @@ const { processScores, accumulate, evaluate } = require('../src/result')
 jest.mock('lighthouse/lighthouse-core/lib/file-namer', () => ({
   getFilenamePrefix: () => 'report'
 }))
+jest.mock('../src/config', () => ({
+  CONFIG_THRESHOLD_DESCRIPTOR: 'threshold',
+  getConfig: () => ({
+    threshold: {
+      performance: 70,
+      pwa: 70,
+      accessibility: 70,
+      'best-practices': 70,
+      seo: 70
+    }
+  })
+}))
 
 describe('result', () => {
   it('.processScores() should process the score value', () => {
@@ -44,7 +56,7 @@ describe('result', () => {
     expect(accumulated.report).toBe('REPORT')
     expect(accumulated.reportName).toBe('report.html')
   })
-  it('.evaluate() create threshold error messages', () => {
+  it('.evaluate() create threshold error messages and override config thresholds', () => {
     const thresholds = {
       pwa: 75,
       seo: 50,
@@ -70,5 +82,21 @@ describe('result', () => {
     expect(evaluated.length).toBe(2)
     expect(evaluated[0]).toBe('PWA threshold not met: 50/75 [https://www.immonet.de]')
     expect(evaluated[1]).toBe('SEO threshold not met: 25/50 [https://www.immonet.de]')
+  })
+  it('.evaluate() should load configuation file thresholds, when thresolds does not pass the cli', () => {
+    const thresholds = {
+      pwa: 0
+    }
+    const result = {
+      url: 'https://www.immonet.de',
+      scores: [{
+        id: 'pwa',
+        score: 50,
+        title: 'PWA'
+      }]
+    }
+    const evaluated = evaluate(result, thresholds)
+    expect(evaluated.length).toBe(1)
+    expect(evaluated[0]).toBe('PWA threshold not met: 50/70 [https://www.immonet.de]')
   })
 })

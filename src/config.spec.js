@@ -1,36 +1,54 @@
 const { configExists, getConfig, filePathAndName } = require('../src/config')
 
 jest.mock('fs')
+const { statSync } = require('fs')
 
-describe('config', () => {
-  const { statSync } = require('fs')
-  afterEach(() => {
+describe('config.configExists()', () => {
+  beforeEach(() => {
     jest.clearAllMocks()
   })
-  it('.configExists() should return false if config in current working dir does not exists', () => {
-    statSync.mockImplementation(() => {throw new Error()})
+  it('should return false if config in current working dir does not exists', () => {
+    statSync.mockImplementation(() => { throw new Error() })
     expect(configExists()).toBe(false)
   })
-  it('.configExists() should return true if config in current working dir does exist', () => {
+  it('should return true if config in current working dir does exist', () => {
     statSync.mockImplementation(jest.fn())
     expect(configExists()).toBe(true)
   })
-  it('.getConfig() should return null if config in current working does not exists', () => {
+})
+
+describe('config.getConfig()', () => {
+  beforeEach(() => {
+    jest.clearAllMocks()
+    jest.resetModules()
+  })
+  it('should return null if config in current working does not exists', () => {
     statSync.mockImplementation(() => {
       throw new Error()
     })
     expect(getConfig()).toBe(null)
   })
-  it('.getConfig() should return null if config could not be loaded', () => {
+  it('should return null if config could not be loaded', () => {
     statSync.mockImplementation(jest.fn())
     jest.doMock(filePathAndName, () => {
       throw new Error()
     })
     expect(getConfig()).toBe(null)
   })
-  it('.getConfig() should return object if config successfully be loaded', () => {
+  it('should return null if config evaluation fails when threshold section missed', () => {
+    const config = {}
     statSync.mockImplementation(jest.fn())
-    jest.doMock(filePathAndName, () => ({}))
-    expect(typeof getConfig()).toBe('object')
+    jest.doMock(filePathAndName, () => (config))
+    expect(getConfig()).toBe(null)
+  })
+  it('should return object configuration if config successfully be loaded', () => {
+    const config = {
+      threshold: {
+        performance: 10
+      }
+    }
+    statSync.mockImplementation(jest.fn())
+    jest.doMock(filePathAndName, () => (config))
+    expect(getConfig()).toBe(config)
   })
 })
