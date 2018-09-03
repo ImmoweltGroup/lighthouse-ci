@@ -18,6 +18,7 @@ script:
   - yarn lint
 after_success:
   - yarn release
+  - yarn global add @immowelt/docker-publish
   - docker login -u=$IMMO_DOCKER_USER -p=$IMMO_DOCKER_PASS
   - DEBUG=*immowelt* docker-publish --tags=https://api.github.com/repos/ImmoweltGroup/lighthouse-ci/tags --image=immowelt/lighthouse-ci --latest
 branches:
