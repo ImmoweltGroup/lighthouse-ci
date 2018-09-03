@@ -43,7 +43,7 @@
     }
   },
   "dependencies": {
-    "bluebird": "3.5.1",
+    "bluebird": "3.5.2",
     "lighthouse": "3.0.3",
     "lodash.flattendeep": "^4.4.0",
     "lodash.pick": "4.4.0",
