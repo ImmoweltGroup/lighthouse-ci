@@ -1,0 +1,9 @@
+{
+  "threshold": {
+    "performance": 10,
+    "pwa": 10,
+    "best-practices": 10,
+    "accessibility": 10,
+    "seo": 10
+  }
+}
