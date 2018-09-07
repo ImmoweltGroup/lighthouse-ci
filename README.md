@@ -30,7 +30,7 @@ lighthouse-ci --help
 We dockerized this package for a better usability in CI pipelines, you can use it locally like this:
 ```
 docker pull immowelt/lighthouse-ci:latest
-docker run -v /path/for/reports:/usr/src/app/lighthouse immowelt/lighthouse-ci:latest https://immowelt.de/ -r
+docker run -v /path/for/reports:/usr/src/app/lighthouse-ci immowelt/lighthouse-ci:latest https://immowelt.de/ -r
 ```
 
 > NOTE: If you want to get the generated reports locally, you need to mount a folder directly to container.
