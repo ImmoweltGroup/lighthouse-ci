@@ -16,6 +16,8 @@ install:
   - yarn
 script:
   - yarn lint
+  - yarn test
+  - ./bin/integTest.sh
 after_success:
   - yarn release
   - yarn global add @immowelt/docker-publish
