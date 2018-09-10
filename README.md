@@ -37,7 +37,7 @@ docker run -v /path/for/reports:/usr/src/app/lighthouse-ci immowelt/lighthouse-c
 
 # TODOs
 
-* Threshold configuration via config file
-* Create node API
-* ~~Dockerized images for direct usage in CI pipeline~~
-* ~~Unit tests are missing!~~
+- [ ] Threshold configuration via config file
+- [ ] Create node API
+- [x] Dockerized images for direct usage in CI pipeline
+- [x] Unit tests are missing!
