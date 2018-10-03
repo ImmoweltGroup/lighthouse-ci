@@ -161,10 +161,10 @@
   resolved "https://registry.yarnpkg.com/@semantic-release/error/-/error-2.2.0.tgz#ee9d5a09c9969eade1ec864776aeda5c5cddbbf0"
   integrity sha512-9Tj/qn+y2j+sjCI3Jd+qseGtHjOAeg7dU2/lVcqIQ9TV3QDaDXDYXcoOHU+7o2Hwh8L8ymL4gfuO7KxDs3q2zg==
 
-"@semantic-release/github@5.0.5":
-  version "5.0.5"
-  resolved "https://registry.yarnpkg.com/@semantic-release/github/-/github-5.0.5.tgz#9149b4fd9232f63ee38039c540a800a00a4d9e55"
-  integrity sha512-Hdt6b8ST2pg6pl151PlcsnTcdsC2UJhA5FdbmunbZG/TVmlnKCZ4WUzpji7YqJtDLjbQTuFm/vhM6atW3XjMWg==
+"@semantic-release/github@5.0.6":
+  version "5.0.6"
+  resolved "https://registry.yarnpkg.com/@semantic-release/github/-/github-5.0.6.tgz#23768d564554ba3f7e44234f09c291ec74d95f80"
+  integrity sha512-SE+ldpvwUMGHPiUjtebsNfTRDnnf8P/paQZ+dvxmGJ6UAuLaQLr4y3DvApg3m57+lkaYALkfB1FGnK9zKycHig==
   dependencies:
     "@octokit/rest" "^15.2.0"
     "@semantic-release/error" "^2.2.0"
