@@ -47,14 +47,14 @@ You are able to define a config file which must be named `lighthouse-ci.json`. L
 We dockerized this package for a better usability in CI pipelines, you can use it locally like this:
 ```
 docker pull immowelt/lighthouse-ci:latest
-docker run -v /path/for/reports:/usr/src/app/lighthouse immowelt/lighthouse-ci:latest https://immowelt.de/ -r
+docker run -v /path/for/reports:/usr/src/app/lighthouse-ci immowelt/lighthouse-ci:latest https://immowelt.de/ -r
 ```
 
 > NOTE: If you want to get the generated reports locally, you need to mount a folder directly to container.
 
 # TODOs
 
-* ~~Threshold configuration via config file~~
-* Create node API
-* ~~Dockerized images for direct usage in CI pipeline~~
-* ~~***Unit tests are missing!***~~
+- [x] Threshold configuration via config file
+- [ ] Create node API
+- [x] Dockerized images for direct usage in CI pipeline
+- [x] Unit tests are missing!

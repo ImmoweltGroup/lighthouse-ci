@@ -16,10 +16,13 @@ install:
   - yarn
 script:
   - yarn lint
+  - yarn test
+  - ./bin/integTest.sh
 after_success:
   - yarn release
+  - yarn global add @immowelt/docker-publish
   - docker login -u=$IMMO_DOCKER_USER -p=$IMMO_DOCKER_PASS
-  - DEBUG=*immowelt* docker-publish --tags=https://api.github.com/repos/ImmoweltGroup/lighthouse-ci/tags --image=immowelt/lighthouse-ci --latest
+  - DEBUG=*immowelt* docker-publish --tags=https://api.github.com/repos/ImmoweltGroup/lighthouse-ci/tags --image=immowelt/lighthouse-ci --arg=LIGHTHOUSE_CI_VERSION
 branches:
   except:
     - /^v\d+\.\d+\.\d+$/

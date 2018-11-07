@@ -14,7 +14,12 @@ RUN chmod +x /usr/bin/chromium-xvfb \
   && mv /usr/bin/chromium-browser /usr/bin/chromium \
   && ln -s /usr/bin/chromium-xvfb /usr/bin/chromium-browser
 
-RUN yarn global add @immowelt/lighthouse-ci \
+
+#
+# Install the Marathon CLI globally.
+#
+ARG LIGHTHOUSE_CI_VERSION="latest"
+RUN yarn global add @immowelt/lighthouse-ci@"$LIGHTHOUSE_CI_VERSION" \
   && mkdir -p /usr/src/app/lighthouse
 
 WORKDIR /usr/src/app/lighthouse-ci
