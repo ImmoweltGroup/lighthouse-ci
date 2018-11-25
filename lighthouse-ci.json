@@ -1,5 +1,11 @@
 {
-  "threshold": {
+  "options": {
+    "disableDeviceEmulation": true,
+    "throttling": {
+      "cpuSlowdownMultiplier": 1
+    }
+  },
+  "thresholds": {
     "performance": 80,
     "pwa": 80,
     "best-practices": 80,

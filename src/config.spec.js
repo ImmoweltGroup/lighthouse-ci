@@ -1,7 +1,12 @@
 const { configExists, getConfig, filePathAndName } = require('../src/config')
 
 jest.mock('fs')
+jest.mock('signale', () => ({
+  warn: jest.fn(),
+  info: jest.fn()
+}))
 const { statSync } = require('fs')
+const { info } = require('signale')
 
 describe('config.configExists()', () => {
   beforeEach(() => {
@@ -21,12 +26,13 @@ describe('config.getConfig()', () => {
   beforeEach(() => {
     jest.clearAllMocks()
     jest.resetModules()
+    info.mockReset()
   })
-  it('should return null if config in current working does not exists', () => {
+  it('should return empty object if config in current working does not exists', () => {
     statSync.mockImplementation(() => {
       throw new Error()
     })
-    expect(getConfig()).toBe(null)
+    expect(getConfig()).toEqual({})
   })
   it('should return null if config could not be loaded', () => {
     statSync.mockImplementation(jest.fn())
@@ -35,11 +41,11 @@ describe('config.getConfig()', () => {
     })
     expect(getConfig()).toBe(null)
   })
-  it('should return null if config evaluation fails when threshold section missed', () => {
+  it('should return empty object if config evaluation fails when threshold section missed', () => {
     const config = {}
     statSync.mockImplementation(jest.fn())
     jest.doMock(filePathAndName, () => (config))
-    expect(getConfig()).toBe(null)
+    expect(getConfig()).toEqual({})
   })
   it('should return object configuration if config successfully be loaded', () => {
     const config = {
@@ -50,5 +56,12 @@ describe('config.getConfig()', () => {
     statSync.mockImplementation(jest.fn())
     jest.doMock(filePathAndName, () => (config))
     expect(getConfig()).toBe(config)
+  })
+  it('should call info when threshold section missed in configuration', () => {
+    const config = {}
+    statSync.mockImplementation(jest.fn())
+    jest.doMock(filePathAndName, () => (config))
+    expect(getConfig()).toEqual({})
+    expect(info).toHaveBeenCalledTimes(2)
   })
 })
