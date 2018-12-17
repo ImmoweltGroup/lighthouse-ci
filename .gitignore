@@ -3,3 +3,5 @@
 /node_modules/
 /reports/
 /coverage/
+/integTest/reports/
+/integTest/output.txt

@@ -45,9 +45,9 @@
   "dependencies": {
     "bluebird": "3.5.3",
     "lighthouse": "3.2.1",
-    "lodash.flattendeep": "^4.4.0",
+    "lodash.flattendeep": "4.4.0",
     "lodash.pick": "4.4.0",
-    "signale": "^1.2.1",
+    "signale": "1.2.1",
     "yargs": "12.0.2"
   },
   "keywords": [
@@ -59,7 +59,8 @@
     "start": "node ./bin/ci.js",
     "lint": "standard",
     "release": "semantic-release",
-    "test": "jest src"
+    "test": "jest src",
+    "integTest": "./integTest/run.sh"
   },
   "devDependencies": {
     "@semantic-release/github": "5.2.1",
