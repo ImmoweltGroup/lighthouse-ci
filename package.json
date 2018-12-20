@@ -62,7 +62,7 @@
     "test": "jest src"
   },
   "devDependencies": {
-    "@semantic-release/github": "5.2.6",
+    "@semantic-release/github": "5.2.7",
     "@semantic-release/npm": "5.1.2",
     "jest": "23.6.0",
     "semantic-release": "15.9.12",
