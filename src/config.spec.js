@@ -1,11 +1,11 @@
-const { configExists, getConfig, filePathAndName } = require('../src/config')
+const { configExists, getConfig } = require('../src/config')
 
 jest.mock('fs')
 jest.mock('signale', () => ({
   warn: jest.fn(),
   info: jest.fn()
 }))
-const { statSync } = require('fs')
+const { statSync, readFileSync } = require('fs')
 const { info } = require('signale')
 
 describe('config.configExists()', () => {
@@ -24,8 +24,7 @@ describe('config.configExists()', () => {
 
 describe('config.getConfig()', () => {
   beforeEach(() => {
-    jest.clearAllMocks()
-    jest.resetModules()
+    jest.resetAllMocks()
     info.mockReset()
   })
   it('should return empty object if config in current working does not exists', () => {
@@ -35,16 +34,12 @@ describe('config.getConfig()', () => {
     expect(getConfig()).toEqual({})
   })
   it('should return null if config could not be loaded', () => {
-    statSync.mockImplementation(jest.fn())
-    jest.doMock(filePathAndName, () => {
-      throw new Error()
-    })
+    readFileSync.mockImplementation(() => (JSON.stringify(null)))
     expect(getConfig()).toBe(null)
   })
-  it('should return empty object if config evaluation fails when threshold section missed', () => {
+  it('should return empty object if config evaluation fails when threshold section missed', async () => {
     const config = {}
-    statSync.mockImplementation(jest.fn())
-    jest.doMock(filePathAndName, () => (config))
+    readFileSync.mockImplementation(() => (JSON.stringify(config)))
     expect(getConfig()).toEqual({})
   })
   it('should return object configuration if config successfully be loaded', () => {
@@ -53,14 +48,12 @@ describe('config.getConfig()', () => {
         performance: 10
       }
     }
-    statSync.mockImplementation(jest.fn())
-    jest.doMock(filePathAndName, () => (config))
-    expect(getConfig()).toBe(config)
+    readFileSync.mockImplementation(() => (JSON.stringify(config)))
+    expect(getConfig()).toEqual(config)
   })
   it('should call info when threshold section missed in configuration', () => {
     const config = {}
-    statSync.mockImplementation(jest.fn())
-    jest.doMock(filePathAndName, () => (config))
+    readFileSync.mockImplementation(() => (JSON.stringify(config)))
     expect(getConfig()).toEqual({})
     expect(info).toHaveBeenCalledTimes(2)
   })

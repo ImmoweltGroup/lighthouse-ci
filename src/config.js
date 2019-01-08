@@ -1,7 +1,7 @@
 const CONFIG_DESCRIPTOR = 'lighthouse-ci.json'
 const CONFIG_THRESHOLD_DESCRIPTOR = 'thresholds'
 const { resolve } = require('path')
-const { statSync } = require('fs')
+const { statSync, readFileSync } = require('fs')
 const { info, warn } = require('signale')
 
 const filePathAndName = resolve(process.cwd(), CONFIG_DESCRIPTOR)
@@ -19,7 +19,7 @@ const configExists = () => {
 const getConfig = () => {
   if (!configExists()) { return {} }
   try {
-    const config = require(filePathAndName)
+    const config = JSON.parse(readFileSync(filePathAndName, 'utf8'))
     evaluateConfiguration(config)
     info('Configuration file loaded successfully')
     return config
@@ -35,4 +35,4 @@ const evaluateConfiguration = (config) => {
   }
 }
 
-module.exports = { configExists, getConfig, filePathAndName, CONFIG_THRESHOLD_DESCRIPTOR }
+module.exports = { configExists, getConfig }

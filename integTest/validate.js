@@ -1,12 +1,12 @@
-const {error, success} = require('signale')
-const {resolve} = require('path')
-const {statSync, readFileSync} = require('fs')
+const { error, success } = require('signale')
+const { resolve } = require('path')
+const { statSync, readFileSync } = require('fs')
 
 const outputFileName = 'output.txt'
 const filePathAndName = resolve(process.cwd(), outputFileName)
 
 try {
-  const errorCount = 0;
+  let errorCount = 0
   statSync(filePathAndName)
   const outputFile = readFileSync(filePathAndName, 'utf8')
 
@@ -31,7 +31,7 @@ try {
     success('Integration test succeded')
     process.exit(0)
   }
-} catch(e) {
+} catch (e) {
   error(`${outputFileName} does not exist`)
   process.exit(1)
 }
