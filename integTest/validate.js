@@ -15,6 +15,11 @@ try {
     errorCount++
   }
 
+  if (!outputFile.includes('Chrome flags used from configuration: --headless')) {
+    error('Chrome flags failed to load from config')
+    errorCount++
+  }
+
   if (!outputFile.includes('Created report')) {
     error('Report failed creation')
     errorCount++

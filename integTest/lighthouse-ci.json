@@ -1,4 +1,5 @@
 {
+  "chromeFlags": ["--headless"],
   "options": {
     "disableDeviceEmulation": true,
     "throttling": {

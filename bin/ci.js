@@ -62,10 +62,18 @@ const { persist } = require('../src/report')
 const { accumulate, evaluate } = require('../src/result')
 const { getConfig } = require('../src/config')
 
-const { options: optionsFromConfig, thresholds: thresholdsFromConfig } = getConfig()
+const {
+  options: optionsFromConfig,
+  thresholds: thresholdsFromConfig,
+  chromeFlags: chromeFlagsFromConfig
+} = getConfig()
+
+if (chromeFlagsFromConfig && chromeFlagsFromConfig.length && chromeFlagsFromConfig.length > 0) {
+  info('Chrome flags used from configuration: %s', chromeFlagsFromConfig)
+}
 
 const launchChromeAndRunLighthouse = url => Promise
-  .resolve(chromeLauncher.launch({ chromeFlags: ['--show-paint-rects', '--headless'] }))
+  .resolve(chromeLauncher.launch({ chromeFlags: ['--headless', '--disable-gpu', '--no-sandbox', ...chromeFlagsFromConfig] }))
   .then(chrome => {
     info('Chrome running on port %i {%s}', chrome.port, url)
     const opts = {

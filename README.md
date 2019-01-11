@@ -28,10 +28,20 @@ lighthouse-ci --help
 # Configuration
 You are able to define a config file which must be named `lighthouse-ci.json`. Lighthouse-ci search for this config in the current working dir where you execute lighthouse-ci. The config file must contains a threshold object, which refers the lighthouse categories with the threshold scores which musst be passed.
 
+Also you are able to pass options down to lighthouse cli and chrome runner which need to be placed at options section for lighthouse options and chrome flags need to be placed at chromeFlags section.
+
 > NOTE: **The passed threshold arguments to the cli overrides the config thresolds**
 
+Example:
 ```
 {
+  "chromeFlags": ["--show-paint-rects"],
+  "options": {
+    "disableDeviceEmulation": true,
+    "throttling": {
+      "cpuSlowdownMultiplier": 1
+    }
+  },
   "threshold": {
     "performance": 80,
     "pwa": 80,
