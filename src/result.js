@@ -13,9 +13,10 @@ const accumulate = result => ({
   report: result.report
 })
 
-const evaluate = (result, thresholds) => result.scores.reduce((score, value) => {
-  if (value.score < thresholds[value.id]) {
-    score.push(format('%s threshold not met: %i/%i [%s]', value.title, value.score, thresholds[value.id], result.url))
+const evaluate = (result, thresholds, thresholdsFromConfig) => result.scores.reduce((score, value) => {
+  const thresholdScore = thresholdsFromConfig && thresholdsFromConfig.hasOwnProperty(value.id) ? thresholdsFromConfig[value.id] : thresholds[value.id]
+  if (value.score < thresholdScore) {
+    score.push(format('%s threshold not met: %i/%i [%s]', value.title, value.score, thresholdScore, result.url))
   }
   return score
 }, [])
