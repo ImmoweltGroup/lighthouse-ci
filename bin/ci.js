@@ -7,6 +7,7 @@ const flatten = require('lodash.flattendeep')
 const pick = require('lodash.pick')
 const lighthouse = require('lighthouse')
 const chromeLauncher = require('chrome-launcher')
+const { getConfig } = require('../src/config')
 
 // Prepare CLI
 // eslint-disable--next-line
@@ -14,6 +15,11 @@ const yargs = require('yargs')
   // Always English
   .detectLocale(false)
   .usage('$0 [<urls>...]', 'Run lighthouse to the given urls')
+  .option('config', {
+    description: 'configuration file',
+    type: 'string',
+    alias: 'c'
+  })
   .option('report', {
     description: 'Generate a (html) report',
     type: 'boolean',
@@ -60,13 +66,12 @@ if (yargs.quiet) {
 const { info, success, warn, error } = signale
 const { persist } = require('../src/report')
 const { accumulate, evaluate } = require('../src/result')
-const { getConfig } = require('../src/config')
 
 const {
   options: optionsFromConfig,
   thresholds: thresholdsFromConfig,
   chromeFlags: chromeFlagsFromConfig
-} = getConfig()
+} = getConfig(yargs.config)
 
 if (chromeFlagsFromConfig && chromeFlagsFromConfig.length && chromeFlagsFromConfig.length > 0) {
   info('Chrome flags used from configuration: %s', chromeFlagsFromConfig)

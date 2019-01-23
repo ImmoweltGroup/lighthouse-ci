@@ -1,0 +1,16 @@
+{
+  "chromeFlags": ["--headless"],
+  "options": {
+    "disableDeviceEmulation": false,
+    "throttling": {
+      "cpuSlowdownMultiplier": 1
+    }
+  },
+  "thresholds": {
+    "performance": 0,
+    "pwa": 0,
+    "best-practices": 0,
+    "accessibility": 0,
+    "seo": 0
+  }
+}
