@@ -35,7 +35,7 @@ Also you are able to pass options down to lighthouse cli and chrome runner which
 Example:
 ```
 {
-  "chromeFlags": ["--show-paint-rects"],
+  "chromeFlags": ["--headless"],
   "options": {
     "disableDeviceEmulation": true,
     "throttling": {
@@ -50,6 +50,14 @@ Example:
     "seo": 80
   }
 }
+```
+
+## Custom configuration file
+
+You can also pass your own custom configuration file to the cli with the `-c` or `--config` option:
+
+```sh
+lighthouse-ci https://immowelt.de/ --config custom-config.json
 ```
 
 # Docker

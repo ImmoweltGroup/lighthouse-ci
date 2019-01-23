@@ -4,9 +4,7 @@ const { resolve } = require('path')
 const { statSync, readFileSync } = require('fs')
 const { info, warn } = require('signale')
 
-const filePathAndName = resolve(process.cwd(), CONFIG_DESCRIPTOR)
-
-const configExists = () => {
+const configExists = (filePathAndName) => {
   try {
     statSync(filePathAndName)
   } catch (e) {
@@ -16,8 +14,10 @@ const configExists = () => {
   return true
 }
 
-const getConfig = () => {
-  if (!configExists()) { return {} }
+const getConfig = (configPath = CONFIG_DESCRIPTOR) => {
+  const filePathAndName = resolve(process.cwd(), configPath)
+
+  if (!configExists(filePathAndName)) { return {} }
   try {
     const config = JSON.parse(readFileSync(filePathAndName, 'utf8'))
     evaluateConfiguration(config)
