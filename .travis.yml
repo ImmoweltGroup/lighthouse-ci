@@ -19,6 +19,7 @@ script:
   - yarn test
   - yarn integTest
 after_success:
+  if: branch = master
   - yarn release
   - yarn global add @immowelt/docker-publish
   - docker login -u=$IMMO_DOCKER_USER -p=$IMMO_DOCKER_PASS
