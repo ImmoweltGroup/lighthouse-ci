@@ -63,7 +63,7 @@
     "integTest": "./integTest/run.sh"
   },
   "devDependencies": {
-    "@semantic-release/github": "5.2.9",
+    "@semantic-release/github": "5.2.10",
     "@semantic-release/npm": "5.1.4",
     "jest": "23.6.0",
     "semantic-release": "15.9.12",
