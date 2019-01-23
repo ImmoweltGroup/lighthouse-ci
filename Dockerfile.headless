@@ -1,0 +1,27 @@
+FROM node:8-alpine
+
+RUN echo "http://dl-cdn.alpinelinux.org/alpine/v3.7/community" >> /etc/apk/repositories \
+    && echo "http://dl-cdn.alpinelinux.org/alpine/v3.7/main" >> /etc/apk/repositories \
+    && apk --no-cache update \
+    && apk add --no-cache chromium xvfb bash grep \
+    && rm -rf /var/cache/apk/* /tmp/*
+
+ENV CHROME_BIN /usr/bin/chromium-browser
+ENV CHROME_PATH /usr/bin/chromium-browser
+
+COPY bin/chromium-xvfb.sh /usr/bin/chromium-xvfb
+RUN chmod +x /usr/bin/chromium-xvfb \
+  && mv /usr/bin/chromium-browser /usr/bin/chromium \
+  && ln -s /usr/bin/chromium-xvfb /usr/bin/chromium-browser
+
+
+#
+# Install the lighthouse ci globally.
+#
+ARG LIGHTHOUSE_CI_VERSION="latest"
+RUN yarn global add @immowelt/lighthouse-ci@"$LIGHTHOUSE_CI_VERSION" \
+  && mkdir -p /usr/src/app/lighthouse-ci
+
+WORKDIR /usr/src/app/lighthouse-ci
+
+ENTRYPOINT ["lighthouse-ci"]

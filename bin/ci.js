@@ -67,10 +67,23 @@ const { info, success, warn, error } = signale
 const { persist } = require('../src/report')
 const { accumulate, evaluate } = require('../src/result')
 
+const chromeDefaultFlags = [
+  '--disable-background-networking',
+  '--disable-default-apps',
+  '--disable-dev-shm-usage',
+  '--disable-extensions',
+  '--disable-gpu',
+  '--disable-setuid-sandbox',
+  '--disable-translate',
+  '--no-first-run',
+  '--no-sandbox',
+  '--safebrowsing-disable-auto-update'
+]
+
 const {
-  options: optionsFromConfig,
+  options: optionsFromConfig = {},
   thresholds: thresholdsFromConfig,
-  chromeFlags: chromeFlagsFromConfig
+  chromeFlags: chromeFlagsFromConfig = []
 } = getConfig(yargs.config)
 
 if (chromeFlagsFromConfig && chromeFlagsFromConfig.length && chromeFlagsFromConfig.length > 0) {
@@ -78,7 +91,7 @@ if (chromeFlagsFromConfig && chromeFlagsFromConfig.length && chromeFlagsFromConf
 }
 
 const launchChromeAndRunLighthouse = url => Promise
-  .resolve(chromeLauncher.launch({ chromeFlags: ['--headless', '--disable-gpu', '--no-sandbox', ...chromeFlagsFromConfig] }))
+  .resolve(chromeLauncher.launch({ chromeFlags: [...chromeDefaultFlags, ...chromeFlagsFromConfig] }))
   .then(chrome => {
     info('Chrome running on port %i {%s}', chrome.port, url)
     const opts = {
