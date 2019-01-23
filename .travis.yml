@@ -23,7 +23,8 @@ jobs:
     - yarn lint
     - yarn test
     - yarn integTest
-  - stage: deploy
+  - stage: release
+    name: "releasing"
     if: branch = master
     script:
     - yarn release
