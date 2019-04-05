@@ -7,8 +7,10 @@ USER root
 #
 ARG LIGHTHOUSE_CI_VERSION="latest"
 RUN yarn global add @immowelt/lighthouse-ci@"$LIGHTHOUSE_CI_VERSION" \
-  && mkdir -p /usr/src/app/lighthouse-ci
+    && mkdir -p /home/node/lighthouse-ci
 
-WORKDIR /usr/src/app/lighthouse-ci
+USER node
+
+WORKDIR /home/node/lighthouse-ci
 
 ENTRYPOINT ["lighthouse-ci"]
